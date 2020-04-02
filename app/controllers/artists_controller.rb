@@ -3,16 +3,15 @@ class ArtistsController < ApplicationController
   before_action :find_artist, only: [:show, :edit, :update, :destroy]
 
     def index
-      @artists = current_user.Artist.all
+      @artists = current_user.artists.all
     end
   
     def show
-
+      @songs = @artist.songs
          if @artist.user != current_user
             flash[:notice] = "Not Allowed!"
             redirect_to artists_path
     end
-    @songs = @artist.songs
   end
     def new
       @artist = Artist.new
@@ -29,19 +28,18 @@ class ArtistsController < ApplicationController
     end
   
     def edit
-      @artist = Artist.find(params[:id])
+      @artist 
     end
   
     def update
-      artist = Artist.find(params[:id])
-      artist.update(artists_params)
+      @artist.update(artists_params)
         
       redirect_to artist
     end
   
     def destroy
-      Artist.find(params[:id]).destroy
-    
+
+      @artist.destroy
       redirect_to artists_path
     end
   
@@ -50,4 +48,7 @@ class ArtistsController < ApplicationController
       def artists_params
         params.require(:artist).permit(:name, :albums, :hometown, :img)
       end
+      def find_artists
+        @artist = Artist.find(params[:id])
+      end  
   end
